@@ -113,6 +113,7 @@ AlpineAuth uses the PHPMailer class to send emails to users to reset their passw
 </p>
 ```
 
+NOTE: For testing emails locally, [Test Mail Server Tool](http://www.toolheap.com/test-mail-server-tool/) is a great option.
 
 ##Errors and Debugging
 AlpineAuth uses an internal error message system. Depending on whether you are making a remote request or a browser-based request, errors will be stored in an object’s array variable or in the $_SESSION array. Some of the error messages are a bit verbose and could be dangerous to expose to the public, for instance:
@@ -253,3 +254,5 @@ In the `AlpineAuth.class.php` file you will find declarations for the following 
 * STATELESS_AUTH_TOKEN_KEY - key used for hashing stateless auth tokens
 * STATELESS_AUTH_TOKEN_SECRET - secret value used for verifying stateless auth tokens
 
+##Disclaimer
+I am not a professional cryptographer, I'm a programmer. All of the cryptographic functions (encryption/decryption of cookies and emails, hashing of user passwords) are done using third party classes that were created by others who have more expertise in that area. If you think there is a security vulnerability, please submit an issue or let me know what I can do to fix it!
