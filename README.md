@@ -33,7 +33,7 @@ Then set your configuration settings in `AlpineAuth.config.php`. You can use the
 * token-based authentication
  * stateful auth tokens (stored in a database)
  * stateless auth tokens (never stored on server) verified with an HMAC (signed and tamper-proof), that expire when a user’s password changes
-* all information stored on the client, whether it be in browser cookies or on a remote device, is verified for integrity with HMAC and encrypted with mcrypt and the AES Rijndael 256 cipher
+* all information stored on the client, whether it be in browser cookies or on a remote device, is verified for integrity with HMAC and encrypted with mcrypt and the Rijndael 256 cipher
 * passwords hashed with Bcrypt. automatically rehashed when settings are changed. salts are automatically generated for each individual password 
 * optional encryption and HMAC protection of user email addresses in the database
 * automatic brute force attack protection using BruteForceBlock
