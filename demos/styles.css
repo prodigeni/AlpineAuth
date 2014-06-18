@@ -1,0 +1,77 @@
+* { padding:0; margin:0; }
+h2{ margin: 5px;}
+body{
+	background:#007F74;
+	color:white;
+	width:80%;
+	margin:0 auto;
+	min-width:700px;
+}
+header{
+	background:#00CCB9;
+	width:100%;
+	text-align:center;
+}
+form{
+	border:1px solid #00CCB9;
+	margin-top:10px;
+	padding:4px;
+}
+table{
+	margin:10px;
+}
+.logged_in{
+	color:yellow; 
+	text-align:right;
+}
+.errors{
+	background:red;
+	width:100%;
+	color:white;
+	margin:10px 0px;
+	padding:5px;
+}
+.no_errors{
+	color:white;
+	background:#00CCB9;
+	margin:10px 0px;
+	padding:5px;
+}
+.encrypt_demo{
+	margin-top:10px;
+	padding:20px;
+	border:1px solid #00FFE7;
+}
+.encrypt_demo li{
+	margin-left:10px;
+}
+.user_info{
+	border:1px solid #00FFE7;
+}
+ul{
+	margin-left:10px;
+	padding-left:10px;
+}
+.remote_device{
+	width:500px;
+	height:450px;
+	background:url('remoteDevice.png');
+	background-size:contain;
+	background-repeat:no-repeat;
+	margin:0 auto;
+	padding-top:80px;
+	padding-left:20px;
+	padding-right:20px;
+	word-wrap: break-word;
+}
+.remote_device_content{
+	width:360px;
+}
+.random_keys{
+	border:1px solid #00FFE7;
+	margin-top:10px;
+	padding:10px;
+}
+.random_keys p{
+	padding:10px;
+}
