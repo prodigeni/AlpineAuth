@@ -1,5 +1,18 @@
 #AlpineAuth
 By Evan Francis, 2014
+
+* [Features](#features)
+* [Authentication](#authentication)
+* [Demos](#demos)
+* [Emails](#emails)
+* [Brute Force Protection](#brute-force-protection)
+* [HTML Form Spam Prevention](#html-form-spam-prevention)
+* [User Permission Levels](#user-permission-levels)
+* [Errors and Debugging](#errors-and-debugging)
+* [List of All Methods](#list-of-all-methods)
+* [Configuration](#configuration)
+* [Disclaimer](#disclaimer)
+
 ##Overview
 AlpineAuth is a user authentication and management library with an emphasis on security and ease of use. The library allows you to quickly and easily add a system of users to your project and create secure pages or methods protected by user authentication. There are many user libraries out there that use outdated and insecure techniques such as system-wide password salts, hash functions or cryptographic ciphers that are no longer considered secure, ignoring brute-force attacks, and storage of unencrypted information on the client. Of the libraries that use sufficient techniques, even fewer offer a wide enough range of options to be useful in most situations. AlpineAuth aims to fix that by providing an easy to use and reliable solution. 
 
