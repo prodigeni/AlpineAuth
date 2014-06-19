@@ -2111,11 +2111,9 @@ class AlpineAuth{
 	//get list of all user. if page parameter is set, pagination used
 	public function getAllUsersObjects($page = null, $per_page = 50){
 		if($page === null){
-			$_SESSION['a'] = true;
 			$all_users = User::all();
 		}
 		else{
-			$_SESSION['b'] = true;
 			$all_users = User::take($per_page)->skip(($page * $per_page)-$per_page)->get();	//User::take($per_page)->skip($page * $per_page)->get();
 		}
 		return $all_users;
