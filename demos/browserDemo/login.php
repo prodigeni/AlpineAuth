@@ -14,11 +14,6 @@ session_start();
 	require_once( __DIR__.'/../../AlpineAuth.class.php' );
 	//create instance of AlpineAuth
 	$alpineAuth = new AlpineAuth;
-	//get register anti spam input
-	$register_anti_spam_input = $alpineAuth->preventFormSpam('registerUser');
-	
-	//session_unset();
-
 	
 	//check if action is being performed from a form. if so, run that method and display response
 	if(isset($_POST['action'])){
@@ -31,12 +26,12 @@ session_start();
 		}
 		else if($_POST['action'] == "register"){
 			//first check for form spam
-			/*if($alpineAuth->checkFormSpam('post','registerUser')){
+			if($alpineAuth->checkFormSpam('post','registerUser')){
 				echo "form spam bot detected!!!<br>";
 				return;
 			}else{
 				echo "NO form spam bot detected<br>";
-			}*/
+			}
 			//get user info
 			$user_name = $_POST['username'];
 			$password = $_POST['password'];
@@ -129,7 +124,7 @@ session_start();
 		<label for="password">Email:</label>
 		<input type="text" name="email" id="email">
 		<input type="hidden" name="action" value="register">
-		<?php echo $register_anti_spam_input; ?>
+		<?php echo $alpineAuth->preventFormSpam('registerUser');; ?>
 		<input type="submit"></input>
 	</form>
 	<form method="post" action="">

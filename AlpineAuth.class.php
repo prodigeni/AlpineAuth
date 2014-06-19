@@ -97,6 +97,7 @@ class AlpineAuth{
 		//if remote, return array
 		if($this->request_mode == 'remote'){
 			$temp_errors = $this->errors;
+			//clear errors array
 			$this->errors = array();
 			//return array or false if empty
 			if(count($temp_errors) == 0){
@@ -2107,16 +2108,23 @@ class AlpineAuth{
 	/*===============================================
 					USER STATS METHODS
 	================================================*/
-	//get list of all user
-	public function getAllUsersObjects(){
-		$all_users = User::all();
+	//get list of all user. if page parameter is set, pagination used
+	public function getAllUsersObjects($page = null, $per_page = 50){
+		if($page === null){
+			$_SESSION['a'] = true;
+			$all_users = User::all();
+		}
+		else{
+			$_SESSION['b'] = true;
+			$all_users = User::take($per_page)->skip(($page * $per_page)-$per_page)->get();	//User::take($per_page)->skip($page * $per_page)->get();
+		}
 		return $all_users;
 	}
 	
-	//get list of all users in an HTML table
-	public function getAllUsersTable(){
+	//get list of all users in an HTML table. if page parameter is set, pagination used
+	public function getAllUsersTable($page = null, $per_page = null){
 		//get all users
-		$all_users = $this->getAllUsersObjects();
+		$all_users = $this->getAllUsersObjects($page, $per_page);
 		//setup table string
 		$table_string = '<table border="1"><thead>
 		<tr><th>ID</th><th>username</th><th>logged_in</th><th>email</th><th>permission_level</th><th>activated</th><th>updated_at</th><th>created_at</th></tr></thead>';

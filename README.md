@@ -194,8 +194,8 @@ NOTE: By default BruteForceBlock clears database entries older than 20-30 minute
 * getUserEmail(username)
 * getUserPasswordInfoObject(user_id)
 * getUserPasswordNumber(user_id)
-* getAllUsersObjects()
-* getAllUsersTable()
+* getAllUsersObjects($page = null, $per_page = 50)
+* getAllUsersTable(page = null, per_page = null)
 
 **Password Reset**
 
