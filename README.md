@@ -255,7 +255,7 @@ login_bfb_delay,login_bfb_catpcha,login_activated_error,login_password_expired_e
 * getUserEmail(username)
 * getUserPasswordInfoObject(user_id)
 * getUserPasswordNumber(user_id)
-* getAllUsersObjects($page = null, $per_page = 50)
+* getAllUsersObjects(page = null, per_page = 50)
 * getAllUsersTable(page = null, per_page = null)
 
 **Password Reset**
