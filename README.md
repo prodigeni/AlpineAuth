@@ -1,6 +1,7 @@
 #AlpineAuth
 By Evan Francis, 2014
 
+* [Overview](#overview)
 * [Features](#features)
 * [Authentication](#authentication)
 * [Demos](#demos)
@@ -11,6 +12,7 @@ By Evan Francis, 2014
 * [Errors and Debugging](#errors-and-debugging)
 * [List of All Methods](#list-of-all-methods)
 * [Configuration](#configuration)
+* [Third Party Components and Credit](#third-party-components-and-credit)
 * [Disclaimer](#disclaimer)
 
 ##Overview
@@ -305,6 +307,15 @@ In the `AlpineAuth.class.php` file you will find declarations for the following 
 * ACCOUNT_ACTIVATION_REDIRECT - URL to link to when sending account activation email
 * STATELESS_AUTH_TOKEN_KEY - key used for hashing stateless auth tokens
 * STATELESS_AUTH_TOKEN_SECRET - secret value used for verifying stateless auth tokens
+
+##Third Party Components and Credit
+* PHP 5.5 backwards compatibility library for password_* hashing functions [password_compat](https://github.com/ircmaxell/password_compat )
+* Encrypted and HMAC protected cookies with [MrClay_CookieStorage](https://code.google.com/p/mrclay/source/browse/trunk/php/MrClay/CookieStorage.php) 
+* Stateless authentication token implementation based off work by [Joseph Scott](https://josephscott.org/archives/2013/08/better-stateless-csrf-tokens/)
+* FlashMessage class derived from class by Bennett Stone [FlashMessage](http://www.phpdevtips.com/2013/05/simple-session-based-flash-messages/) 
+* Email via [PHPMailer](https://github.com/Synchro/PHPMailer)
+* Database class (and Eloquent ORM) via Laravel’s [Illuminate Database toolkit](https://github.com/illuminate/database)
+
 
 ##Disclaimer
 I am not a professional cryptographer, I'm a programmer. All of the cryptographic functions (encryption/decryption of cookies and emails, hashing of user passwords) are done using third party classes that were created by others who have more expertise in that area. If you think there is a security vulnerability, please submit an issue or let me know what I can do to fix it!
