@@ -64,8 +64,10 @@ Then set your configuration settings in `AlpineAuth.config.php`. You can use the
 * by default, methods  modifyUserBrowser() and setUserPermissionLevelBrowser() only allow users to modify themselves unless admin_mode parameter is set to true to protect against destructive activities. The methods modifyUserRemote() and setUserPermissionLevelRemote() only allow the user to modify themself no matter what, to avoid malicious destructive activities.
   
 ###user management
+* register new users
 * modify a user's information
 * retrieve a user's information
+* remove users and all associated data
 * optionally require account activation via email
 * optionally expire user passwords after a set time limit, require reset via email
 * send users emails automatically when required, built from customizable HTML files 
