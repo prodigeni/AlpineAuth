@@ -75,7 +75,7 @@ Then set your configuration settings in `AlpineAuth.config.php`. You can use the
  * password reset email sent with sendUserPasswordResetEmail(username)  
 * set and get user permission levels (a numeric value)
 * verify a user exists
-* automatically generate an html table of all users
+* automatically generate an html table of all users, with optional pagination
 
 ##Authentication
 To use AlpineAuth properly you should understand how it works. Authentication is done with tokens, a user provides a cookie containing a token with each request and AlpineAuth determines whether or not the token is valid. If it is, you know the user is logged in and legitimate. When a user successfully logs in, they are given a cookie that looks similar to 
