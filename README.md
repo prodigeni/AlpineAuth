@@ -1,9 +1,24 @@
 #AlpineAuth
 By Evan Francis, 2014
+
+* [Overview](#overview)
+* [Features](#features)
+* [Authentication](#authentication)
+* [Demos](#demos)
+* [Emails](#emails)
+* [Brute Force Protection](#brute-force-protection)
+* [HTML Form Spam Prevention](#html-form-spam-prevention)
+* [User Permission Levels](#user-permission-levels)
+* [Errors and Debugging](#errors-and-debugging)
+* [List of All Methods](#list-of-all-methods)
+* [Configuration](#configuration)
+* [Third Party Components and Credit](#third-party-components-and-credit)
+* [Disclaimer](#disclaimer)
+
 ##Overview
 AlpineAuth is a user authentication and management library with an emphasis on security and ease of use. The library allows you to quickly and easily add a system of users to your project and create secure pages or methods protected by user authentication. There are many user libraries out there that use outdated and insecure techniques such as system-wide password salts, hash functions or cryptographic ciphers that are no longer considered secure, ignoring brute-force attacks, and storage of unencrypted information on the client. Of the libraries that use sufficient techniques, even fewer offer a wide enough range of options to be useful in most situations. AlpineAuth aims to fix that by providing an easy to use and reliable solution. 
 
-Methods are divided into two types, browser and remote. Browser methods are for use when building a typical web page that will be accessed by a web browser. Remote methods are for use when building an application that is accessing the server remotely, such as a mobile app or video game. Browser methods will return `true` or `false` depending on the result of the request. Remote methods will return a JSON response containing information about the request and the result. For instance, logInUserBrowser(username,password) would return’ true’ if the given the proper credentials. Given the same correct credentials, logInUserRemote(username,password) would return 
+Methods are divided into two types, browser and remote. Browser methods are for use when building a typical web page that will be accessed by a web browser. Remote methods are for use when building an application that is accessing the server remotely, such as a mobile app or video game. Browser methods will return `true` or `false` depending on the result of the request. Remote methods will return a JSON response containing information about the request and the result. For instance, logInUserBrowser(username,password) would return `true` if the given the proper credentials. Given the same correct credentials, logInUserRemote(username,password) would return 
 
 ```
 {
@@ -19,7 +34,7 @@ Methods are divided into two types, browser and remote. Browser methods are for 
 This way an app on a remote device such as a mobile phone or video game can be aware of the response and store the returned user data for later use.  
 
 ###Installation
-To user AlpineAuth, move the entire AlpineAuth directory to somewhere on your web server, then include the `AlpineAuth.class.php` file and create a new instance like so:
+To use AlpineAuth, move the entire AlpineAuth directory to somewhere on your web server, then include the `AlpineAuth.class.php` file and create a new instance like so:
 ```
 require_once( __DIR__.'/AlpineAuth/AlpineAuth.class.php');
 
@@ -48,9 +63,19 @@ Then set your configuration settings in `AlpineAuth.config.php`. You can use the
   * verifies HTTP_REFERER
 * by default, methods  modifyUserBrowser() and setUserPermissionLevelBrowser() only allow users to modify themselves unless admin_mode parameter is set to true to protect against destructive activities. The methods modifyUserRemote() and setUserPermissionLevelRemote() only allow the user to modify themself no matter what, to avoid malicious destructive activities.
   
-###other
-* choose whether or not to send an account activation email to require activation before logging in, built from a customizable HTML template file
-* send password reset/recovery emails automatically, built from a customizable HTML template file
+###user management
+* register new users
+* modify a user's information
+* retrieve a user's information
+* remove users and all associated data
+* optionally require account activation via email
+* optionally expire user passwords after a set time limit, require reset via email
+* send users emails automatically when required, built from customizable HTML files 
+ * account activation email sent immediately after a user registers for a new account
+ * password reset email sent with sendUserPasswordResetEmail(username)  
+* set and get user permission levels (a numeric value)
+* verify a user exists
+* automatically generate an html table of all users
 
 ##Authentication
 To use AlpineAuth properly you should understand how it works. Authentication is done with tokens, a user provides a cookie containing a token with each request and AlpineAuth determines whether or not the token is valid. If it is, you know the user is logged in and legitimate. When a user successfully logs in, they are given a cookie that looks similar to 
@@ -66,15 +91,15 @@ Both browser and remote authentication are done by providing AlpineAuth with thi
 
 
 ##Demos
-There are three demos included in the repository, a browser demo and a remote demo. It is recommended to read over these demo pages to get comfortable with how everything works. Remember that these demos are not complete, they don't do any input filtering or validation.
+There are three demos included in the repository; a browser demo, a remote demo and an encryption demo. It is recommended to read over these demo pages to get comfortable with how everything works. Remember that these demos are not complete, they don't do any input filtering or validation.
 
 
 The **browser demo** contains the following pages:
 
 * ‘login.php’ - provides the user with forms to test the following methods
  * logInUserBrowser() 
- * registerNewUser()
- * removeUser()
+ * registerNewUserBrowser()
+ * removeUserBrowser()
  * sendUserPasswordResetEmail()
  * preventFormSpam() and checkFormSpam()
 * ‘protected.php’ - an example of a protected page, sends the user to ‘login.php’ if not authenticated and authorized. provides forms to test the following methods
@@ -115,6 +140,60 @@ AlpineAuth uses the PHPMailer class to send emails to users to reset their passw
 
 NOTE: For testing emails locally, [Test Mail Server Tool](http://www.toolheap.com/test-mail-server-tool/) is a great option.
 
+
+##Brute Force Protection
+AlpineAuth uses the BruteForceBlock class to provide protection against brute force attacks that attempt to crack users' passwords. Enable it with the `USE_BRUTE_FORCE_PREVENTION` config setting. All failed logins site-wide are stored in a database, and you set a limit to how many failed logins can happen in 10 minutes. If it's greater than your minimum threshold, it's assumed a brute force attack is happening and either a timed delay between login requests is enforced or a captcha is required. The login methods both take an array of throttle settings as a parameter. If it's not set the default array is used but this should *not* be relied on. You should base these settings on the size of your user base and its activity.
+
+Here is the default throttle settings array to show how you can build it. Note that captcha isn't supported for remote methods, so only a time delay can be used if you're using remote methods.
+```php
+// array of throttle settings
+// # recent failed logins => response
+$throttle_settings = [
+	50 => 2, 			//delay in seconds
+	150 => 4, 			//delay in seconds
+	300 => 'captcha'	//captcha
+];
+```
+When using the browser login method, the parameters are `logInUserBrowser(username,password,captcha=false,throttle_settings=false)`. 
+If AlpineAuth returns the `login_bfb_captcha` error, the user is required solve a CAPTCHA. The `captcha` parameter should only be true if it's *required* and was just *solved correctly* by the user. Similarly, if the `login_bdb_delay` error is returned the use is required to wait a time delay before logging in again.
+
+When using the remote login method, the parameters are 
+`logInUserRemote(username, password, throttle_settings = false)`. There is no option for CAPTCHA with remote requests.
+
+NOTE: By default BruteForceBlock clears database entries older than 20-30 minutes
+
+##HTML Form Spam Prevention
+There are two methods for preventing form spam on your webpages, preventFormSpam(name) and checkFormSpam(request_type,name). The preventFormSpam() method returns a hidden `<input>` tag and saves the page URL in a session variable. In the script that your form POSTs/GETs to, when you call checkFormSpam() it checks to see if the hidden input is empty and the HTTP_REFERER matches the session variable that was set. If neither is true, a spam bot is suspected and checkFormSpam() returns `true`.
+
+Example usage:
+```php
+<form method="post" action="">
+	<h2>Register New User (send email for activation)</h2>
+	<label for="username">Username:</label>
+	<input type="text" name="username" id="username">
+	<label for="password">Password:</label>
+	<input type="password" name="password" id="password">
+	<label for="password">Email:</label>
+	<input type="text" name="email" id="email">
+	<input type="hidden" name="action" value="register">
+	<?php echo $alpineAuth->preventFormSpam('registerUser'); ?>	<!-- here -->
+	<input type="submit"></input>
+</form>
+```
+Then in the script it posts to:
+```php
+// check for form spam
+if($alpineAuth->checkFormSpam('post','registerUser')){
+	//form spam bot detected!!!
+	return;
+}else{
+	//NO form spam bot detected
+}
+ ```
+
+##User Permission Levels
+User permissions in AlpineAuth are handled as a basic numeric value. If all you need is a few types of users, say 'normal' 'contributor' 'admin' and 'superadmin', the built in system would be sufficient by assigning values like 1, 2, 3 and 4. If you need a more sophisticated role-based system, I suggest you use something like [PHPRBAC](http://phprbac.net/) alongside AlpineAuth. Such a system relies on only a user ID for referencing a user, so integrating it wouldn't be a problem.
+
 ##Errors and Debugging
 AlpineAuth uses an internal error message system. Depending on whether you are making a remote request or a browser-based request, errors will be stored in an object’s array variable or in the $_SESSION array. Some of the error messages are a bit verbose and could be dangerous to expose to the public, for instance:
 `[modify_user_remote_decrypt_secure_user_data_error]=> Failed to decrypt secure user data. Error(s):Cookie was tampered with. `
@@ -141,26 +220,8 @@ Here is a suggested whitelist for error keys (errors that are safe and should be
 login_bfb_delay,login_bfb_catpcha,login_activated_error,login_password_expired_error, authenticate_user_error,create_user_empty_username_error, create_user_empty_password_error,create_user_empty_email_error, create_user_create_error, modify_user_empty_name_error, modify_user_browser_error, set_user_permission_level_admin_error, authenticate_user_password_reset_token_expired_error, reset_user_password_token_activated_error
 ```
 
-##Brute Force Protection
-AlpineAuth uses the BruteForceBlock class to provide protection against brute force attacks that attempt to crack users' passwords. Enable it with the `USE_BRUTE_FORCE_PREVENTION` config setting. All failed logins site-wide are stored in a database, and you set a limit to how many failed logins can happen in 10 minutes. If it's greater than your minimum threshold, it's assumed a brute force attack is happening and either a timed delay between login requests is enforced or a captcha is required. The login methods both take an array of throttle settings as a parameter. If it's not set the default array is used but this should *not* be relied on. You should base these settings on the size of your user base and its activity.
 
-Here is the default throttle settings array to show how you can build it. Note that captcha isn't supported for remote methods, so only a time delay can be used if you're using remote methods.
-```php
-// array of throttle settings
-// # recent failed logins => response
-$throttle_settings = [
-	50 => 2, 			//delay in seconds
-	150 => 4, 			//delay in seconds
-	300 => 'captcha'	//captcha
-];
-```
-When using the browser login method, the parameters are `logInUserBrowser(username,password,captcha=false,throttle_settings=false)`. 
-If AlpineAuth returns the `login_bfb_captcha` error, the user is required solve a CAPTCHA. The `captcha` parameter should only be true if it's *required* and was just *solved correctly* by the user. Similarly, if the `login_bdb_delay` error is returned the use is required to wait a time delay before logging in again.
 
-When using the remote login method, the parameters are 
-`logInUserRemote(username, password, throttle_settings = false)`. There is no option for CAPTCHA with remote requests.
-
-NOTE: By default BruteForceBlock clears database entries older than 20-30 minutes
 ##List of All Methods
 **Browser**
 
@@ -208,11 +269,6 @@ NOTE: By default BruteForceBlock clears database entries older than 20-30 minute
 * resendUserActivationEmail(username)
 * activateUser(username, activation_code)
 
-**User Permission Level**
-
-* setUserPermissionLevel(username, permission_level)
-* getUserPermissionLevel(username)
-
 **Brute Force Attack Prevention**
 
 * getBruteForceBlockerStatus(throttle_settings = null)
@@ -253,6 +309,15 @@ In the `AlpineAuth.class.php` file you will find declarations for the following 
 * ACCOUNT_ACTIVATION_REDIRECT - URL to link to when sending account activation email
 * STATELESS_AUTH_TOKEN_KEY - key used for hashing stateless auth tokens
 * STATELESS_AUTH_TOKEN_SECRET - secret value used for verifying stateless auth tokens
+
+##Third Party Components and Credit
+* PHP 5.5 backwards compatibility library for password_* hashing functions [password_compat](https://github.com/ircmaxell/password_compat )
+* Encrypted and HMAC protected cookies with [MrClay_CookieStorage](https://code.google.com/p/mrclay/source/browse/trunk/php/MrClay/CookieStorage.php) 
+* Stateless authentication token implementation based off work by [Joseph Scott](https://josephscott.org/archives/2013/08/better-stateless-csrf-tokens/)
+* FlashMessage class derived from class by Bennett Stone [FlashMessage](http://www.phpdevtips.com/2013/05/simple-session-based-flash-messages/) 
+* Email via [PHPMailer](https://github.com/Synchro/PHPMailer)
+* Database class (and Eloquent ORM) via Laravel’s [Illuminate Database toolkit](https://github.com/illuminate/database)
+
 
 ##Disclaimer
 I am not a professional cryptographer, I'm a programmer. All of the cryptographic functions (encryption/decryption of cookies and emails, hashing of user passwords) are done using third party classes that were created by others who have more expertise in that area. If you think there is a security vulnerability, please submit an issue or let me know what I can do to fix it!
